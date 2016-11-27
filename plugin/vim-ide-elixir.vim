@@ -28,8 +28,13 @@ function! Tag_transform(tags)
 
   function! Arity_extract(idx, tag)
     if a:tag.fields.kind == 'f' || a:tag.fields.kind == 'g'
-      let args_string = substitute(a:tag.pattern, "^.*".a:tag.name."[ \t]*", "", "")
-      let args_string = substitute(args_string, "do[ \t]*\\\\[$]$", "", "")
+      let args_string = substitute(a:tag.pattern, "^.*defp\\?[ \t]*".a:tag.name."[ \t]*", "", "")
+      let args_string = substitute(args_string, "do[ \t]*\\\\[$]$", "", "") " multiline
+"      TODO: remove
+"      if a:tag.pattern =~ "defp reply" 
+"        debug echo("asd")
+"      endif
+      let args_string = substitute(args_string, ")\\([ \t]*when.*\\)\\?,[ \t]*do.*\\\\[$]$", ")", "")
       let args_string = substitute(args_string, "[ \t]*", "", "g")
 
       let args_len = len(args_string)
@@ -43,7 +48,6 @@ function! Tag_transform(tags)
           let args_string = substitute(args_string, "\\[[^]]*\\]", "", "g")
           let old_args_len = args_len
           let args_len = len(args_string)
-          echo(args_string)
         endwhile
 
         let comma_count = len(substitute(args_string, "[^,]", "", "g"))
@@ -110,4 +114,7 @@ set updatetime=500
 
 " keyboard shortcuts
 nmap <F4> :TagbarToggle<CR>
+nmap <C-@> :CtrlPTagbar<CR>
+nmap <Leader>l :CtrlPLine<CR>
+
 
