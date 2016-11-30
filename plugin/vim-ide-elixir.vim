@@ -5,19 +5,18 @@
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let s:bundle_path = s:path."/bundle"
 
+
 " for now load by placing this in .vimrc
 " find a way to do it from inside module while being loaded
 " runtime bundle/vim-pathogen/autoload/pathogen.vim
 " execute pathogen#infect("bundle/{}", "bundle/vim-ide-elixir/bundle/{}")
 
-""echom("doing well ". s:path)
-""let s:modules = ["vim-desert-programming", "vim-elixir"]
-"" we have pathogen as plugin manager
+"let s:modules = ["vim-desert-programming", "vim-elixir"]
+
+" we have pathogen as plugin manager
 "if exists("g:loaded_pathogen")
-""  echom("doing well ". s:bundle_path)
 "  execute pathogen#infect(s:bundle_path."/{}")
-""  echom(&rtp)
-"  "runtime(s:bundle_path)
+"  "runtime(s:bundle_path."/vim-desert-programming")
 "endif
 
 
