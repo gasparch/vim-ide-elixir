@@ -18,6 +18,19 @@ GenServer callbacks moved to separate group.
 `Ctrl-@` to use Ctrl-P search on function names and quick jump on them
 `<Leader>l` to fuzzy search text in file
 
+## Starting using plugin
+Right now initialization from inside the plugin does not work properly.
+
+If you are using pathogen please replace your `pathogen#infect` line with following.
+
+```vim
+execute pathogen#infect("bundle/{}", "bundle/vim-ide-elixir/bundle/{}")
+```
+
+## how to initialize submodules
+```
+git submodule update --init --recursive
+```
 
 ## how to update submodules
 ```
