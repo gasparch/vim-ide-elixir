@@ -34,3 +34,6 @@
 [submodule "bundle/ctrlp-tagbar.vim"]
 	path = bundle/ctrlp-tagbar.vim
 	url = https://github.com/gasparch/ctrlp-tagbar.vim.git
+[submodule "bundle/vim-elixir-fold"]
+	path = bundle/vim-elixir-fold
+	url = https://github.com/gasparch/vim-elixir-fold
