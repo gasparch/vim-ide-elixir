@@ -35,4 +35,21 @@ map <Leader>- =:Tabularize /-><CR>
 " tabularize hashmaps and similar
 map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
 
+" TODO: make it work better with vim-elixir-fold
+" and do not break folds of functions, make commend on column where
+" indent level is
+"
+" commenting and uncommenting with  # sign
+map <C-k>[ :let old_src = @/<CR>:s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+map <C-k>] :let old_src = @/<CR>:s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+imap <C-k>[ <Esc>:let old_src = @/<CR>:s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>a
+imap <C-k>] <Esc>:let old_src = @/<CR>:s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>a
 
+vmap <C-k>[ :<BS><BS><BS><BS><BS>let old_src = @/<CR>:'<,'>s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+vmap <C-k>] :<BS><BS><BS><BS><BS>let old_src = @/<CR>:'<,'>s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+
+map <C-k><C-[> <C-k>[
+map <C-k><C-]> <C-k>]
+
+imap <C-k><C-[> <C-k>[
+imap <C-k><C-]> <C-k>]
