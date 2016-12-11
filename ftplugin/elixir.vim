@@ -1,13 +1,24 @@
+let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+let s:bundle_path = s:path."/bundle"
 
+" general vim settings 
+set updatetime=500
+set autoindent
+set cindent
+set smartindent
+set noinfercase
+set noerrorbells
 
-"set expandtab
-"set tabstop=2
-"set shiftwidth=2
+set incsearch
+set nohls
 
+" tab formatting settings - automatically provided by vim-sleuth
 
-nmap <F1> K
+" ####################################################################
+" integratino with vim-alchemist
+nnoremap <buffer> <silent> F1 :call alchemist#exdoc()<CR>
 
-let g:alchemist#elixir_erlang_src = "/home/nm/dev/github"
+let g:alchemist#elixir_erlang_src = expand("<sfile>:p:h:h") . "/source"
 
 let g:ConqueTerm_CloseOnEnd=1
 let g:alchemist_iex_term_size = 15
@@ -27,6 +38,110 @@ let g:alchemist_iex_term_size = 15
 "set bexpr=ErlBalloonExpr()
 "set ballooneval
 
+
+
+" ####################################################################
+" integration with Tagbar
+"
+function! Tag_transform(tags) " {{{
+  " remove OTP callbacks from ordinary function list
+  call filter(a:tags, ' !(v:val.fields.kind == "f" && v:val.name =~ "\\v(handle_call|handle_info|handle_cast|init|terminate)") ')
+
+  function! Arity_extract(idx, tag)
+    if a:tag.fields.kind == 'f' || a:tag.fields.kind == 'g'
+      let args_string = substitute(a:tag.pattern, "^.*defp\\?[ \t]*".a:tag.name."[ \t]*", "", "")
+      let args_string = substitute(args_string, "do[ \t]*\\\\[$]$", "", "") " multiline
+"      TODO: remove
+"      if a:tag.pattern =~ "defp reply" 
+"        debug echo("asd")
+"      endif
+      let args_string = substitute(args_string, ")\\([ \t]*when.*\\)\\?,[ \t]*do.*\\\\[$]$", ")", "")
+      let args_string = substitute(args_string, "[ \t]*", "", "g")
+
+      let args_len = len(args_string)
+
+      if args_len == 0
+        let a:tag.name = a:tag.name."/0"
+      else
+        let old_args_len = -10000
+        while args_len != old_args_len
+          let args_string = substitute(args_string, "{[^}]*}", "", "g")
+          let args_string = substitute(args_string, "\\[[^]]*\\]", "", "g")
+          let old_args_len = args_len
+          let args_len = len(args_string)
+        endwhile
+
+        let comma_count = len(substitute(args_string, "[^,]", "", "g"))
+        let a:tag.name = a:tag.name . "/" . (comma_count + 1)
+      endif
+
+      return a:tag
+    else
+      return a:tag
+    endif
+  endfunction
+
+  " replaces function names with function_name/arity notation
+  call map(a:tags, function('Arity_extract'))
+
+  let seen_list = map(copy(a:tags), '[v:val.fields.kind, v:val.name, v:val.fields.line]')
+
+  let seen_fnames = {}
+  for [kind, fname, line] in seen_list
+    if ! has_key(seen_fnames, kind.fname)
+      let seen_fnames[kind.fname] = line
+    endif
+  endfor
+
+  " leaves only first definition of function with same arity
+  function! Filter_fun(seen_hash, idx, tag)
+    let key = a:tag.fields.kind . a:tag.name
+    let line = a:tag.fields.line
+
+    return a:seen_hash[key] == line
+  endfunction
+
+  call filter(a:tags, function('Filter_fun', [seen_fnames]))
+
+  return a:tags
+endfunction " }}}
+
+let g:tagbar_type_elixir = {
+    \ 'ctagstype' : 'elixir',
+    \ 'deffile' : s:path . '/extras/elixir-ctags/.ctags',
+    \ 'transform': function("Tag_transform"),
+    \ 'kinds' : [
+        \ 'm:modules:1',
+        \ 'O:OTP callbacks',
+        \ 't:tests',
+        \ 'f:functions (public)',
+        \ 'g:functions (private)',
+        \ 'c:callbacks',
+        \ 'd:delegates',
+        \ 'e:exceptions',
+        \ 'i:implementations',
+        \ 'a:macros',
+        \ 'o:operators',
+        \ 's:structs',
+        \ 'p:protocols',
+        \ 'r:records',
+        \ 'T:types',
+        \ 'z:foo'
+    \ ]
+\ }
+
+
+" keyboard shortcuts
+nmap <F4> :TagbarToggle<CR>
+nmap <C-@> :CtrlPTagbar<CR>
+nmap <Leader>l :CtrlPLine<CR>
+
+
+
+" ####################################################################
+" Integration with Tabularize
+
+
 " tabularize both => and =
 map <Leader>= =:Tabularize /=><CR>
 map <Leader>eq =:Tabularize /=/<CR>
@@ -34,6 +149,13 @@ map <Leader>eq =:Tabularize /=/<CR>
 map <Leader>- =:Tabularize /-><CR>
 " tabularize hashmaps and similar
 map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
+
+
+
+
+" ####################################################################
+" Elixir commenting/uncommenting shortcuts
+
 
 " TODO: make it work better with vim-elixir-fold
 " and do not break folds of functions, make commend on column where
@@ -53,3 +175,110 @@ map <C-k><C-]> <C-k>]
 
 imap <C-k><C-[> <C-k>[
 imap <C-k><C-]> <C-k>]
+
+
+
+function! RestorePos()
+	if line("'.") > 0
+		if line("'.") <= line("$")
+			exe("norm `.zz")
+			if foldclosed('.') >= 0
+				. foldopen
+			endif
+		else
+			exe "norm $"
+		endif
+	else
+		if line("'\"") > 0
+			if line("'\"") <= line("$")
+				exe("norm '\"zz")
+				if foldclosed('.') >= 0
+					. foldopen
+				endif
+			else
+				exe "norm $"
+			endif
+		endif
+	endif
+endf
+
+au BufReadPost * call RestorePos()
+
+" Toggle fold state between closed and opened with the space bar
+" If there is no fold at current line, just moves forward.
+" If it is present, reverse it's state.
+function! ToggleFold()
+	if foldlevel('.') == 0
+		normal! l
+	else
+		if foldclosed('.') < 0
+			. foldclose
+		else
+			. foldopen
+		endif
+	endif
+	" Clear status line
+	echo
+endfunction
+noremap <F3> :call ToggleFold()<CR>
+
+nmap n nzz
+nmap N Nzz
+
+set showmatch
+set matchtime=2
+
+map <Leader>trailing :%s/\s*$//<CR>
+map <Leader>$ :%s/\s*$//<CR>
+
+set wildignore=*.o,*.obj,*.beam
+
+" save file like in `borland-ides`
+nmap <F2> :w<CR>
+imap <F2> <Esc>:w<CR>a
+
+" refactoring support
+map <C-K><C-w> :%s#\<<c-r><c-w>\>#
+map <C-K><C-a> :%s#\<<c-r><c-a>\>#
+
+set diffopt=iwhite
+set undofile
+set undodir=~/.vimundo/
+
+set backupdir=~/.vimbackup
+set writebackup
+set backup
+
+" delete buffer and keep split
+cab bdd bp\|bd #
+
+" cross reference
+"
+"  mix xref callers Mod
+"  mix xref callers Mod.Fun
+"  mix xref callers Mod.Fun/Arity
+"
+"
+"  which files are called/included
+"  mix xref graph --source lib/feed/betco_pusher/stream/api.ex --format pretty
+"
+"  which files call/include this one
+"  mix xref graph --sink lib/feed/betco_pusher/stream/api.ex --format pretty
+"
+"  mix xref unreachable
+"  mix xref warnings
+"
+
+function! s:ShowXRef() 
+  " does not work well right now :)
+  let a=alchemist#get_current_module_details()['module']['name']
+  let b=tagbar#currenttag('%s', '')
+  let c=a.".".b
+  exec "Mix xref callers ".c
+endfunction
+
+
+
+
+
+
