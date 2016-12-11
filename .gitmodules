@@ -37,3 +37,6 @@
 [submodule "bundle/vim-elixir-fold"]
 	path = bundle/vim-elixir-fold
 	url = https://github.com/gasparch/vim-elixir-fold
+[submodule "bundle/vim-sleuth"]
+	path = bundle/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth.git
