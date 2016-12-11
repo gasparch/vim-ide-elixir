@@ -1,17 +1,6 @@
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let s:bundle_path = s:path."/bundle"
 
-" general vim settings 
-set updatetime=500
-set autoindent
-set cindent
-set smartindent
-set noinfercase
-set noerrorbells
-
-set incsearch
-set nohls
-
 " tab formatting settings - automatically provided by vim-sleuth
 
 " ####################################################################
@@ -137,7 +126,6 @@ nmap <C-@> :CtrlPTagbar<CR>
 nmap <Leader>l :CtrlPLine<CR>
 
 
-
 " ####################################################################
 " Integration with Tabularize
 
@@ -177,57 +165,6 @@ imap <C-k><C-[> <C-k>[
 imap <C-k><C-]> <C-k>]
 
 
-
-function! RestorePos()
-	if line("'.") > 0
-		if line("'.") <= line("$")
-			exe("norm `.zz")
-			if foldclosed('.') >= 0
-				. foldopen
-			endif
-		else
-			exe "norm $"
-		endif
-	else
-		if line("'\"") > 0
-			if line("'\"") <= line("$")
-				exe("norm '\"zz")
-				if foldclosed('.') >= 0
-					. foldopen
-				endif
-			else
-				exe "norm $"
-			endif
-		endif
-	endif
-endf
-
-au BufReadPost * call RestorePos()
-
-" Toggle fold state between closed and opened with the space bar
-" If there is no fold at current line, just moves forward.
-" If it is present, reverse it's state.
-function! ToggleFold()
-	if foldlevel('.') == 0
-		normal! l
-	else
-		if foldclosed('.') < 0
-			. foldclose
-		else
-			. foldopen
-		endif
-	endif
-	" Clear status line
-	echo
-endfunction
-noremap <F3> :call ToggleFold()<CR>
-
-nmap n nzz
-nmap N Nzz
-
-set showmatch
-set matchtime=2
-
 map <Leader>trailing :%s/\s*$//<CR>
 map <Leader>$ :%s/\s*$//<CR>
 
@@ -240,14 +177,6 @@ imap <F2> <Esc>:w<CR>a
 " refactoring support
 map <C-K><C-w> :%s#\<<c-r><c-w>\>#
 map <C-K><C-a> :%s#\<<c-r><c-a>\>#
-
-set diffopt=iwhite
-set undofile
-set undodir=~/.vimundo/
-
-set backupdir=~/.vimbackup
-set writebackup
-set backup
 
 " delete buffer and keep split
 cab bdd bp\|bd #
