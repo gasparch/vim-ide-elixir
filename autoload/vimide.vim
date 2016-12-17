@@ -12,7 +12,9 @@ function! vimide#boot() " {{{
   if g:vimide_manage_folds | call vimide#setFoldsSettings() | endif
   if g:vimide_manage_restore | call vimide#setRestoreSettings() | endif
 
-  call vimide#elixir#boot()
+  if &filetype == 'elixir'
+    call vimide#elixir#boot()
+  endif
 
   if g:vimide_install_shortcuts | call vimide#setShortcuts() | endif
 endfunction " }}}
