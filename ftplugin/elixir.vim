@@ -1,11 +1,13 @@
 let s:path = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let s:bundle_path = s:path."/bundle"
 
+call vimide#boot(0)
+
 " tab formatting settings - automatically provided by vim-sleuth
 
 " ####################################################################
 " integratino with vim-alchemist
-nnoremap <buffer> <silent> F1 :call alchemist#exdoc()<CR>
+nnoremap <buffer> <silent> <F1> :call alchemist#exdoc()<CR>
 
 let g:alchemist#elixir_erlang_src = expand("<sfile>:p:h:h") . "/source"
 
@@ -41,7 +43,7 @@ function! Tag_transform(tags) " {{{
       let args_string = substitute(a:tag.pattern, "^.*defp\\?[ \t]*".a:tag.name."[ \t]*", "", "")
       let args_string = substitute(args_string, "do[ \t]*\\\\[$]$", "", "") " multiline
 "      TODO: remove
-"      if a:tag.pattern =~ "defp reply" 
+"      if a:tag.pattern =~ "defp reply"
 "        debug echo("asd")
 "      endif
       let args_string = substitute(args_string, ")\\([ \t]*when.*\\)\\?,[ \t]*do.*\\\\[$]$", ")", "")
@@ -120,6 +122,7 @@ let g:tagbar_type_elixir = {
 \ }
 
 
+" general Tagbar integration
 " keyboard shortcuts
 nmap <F4> :TagbarToggle<CR>
 nmap <C-@> :CtrlPTagbar<CR>
@@ -150,23 +153,20 @@ map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
 " indent level is
 "
 " commenting and uncommenting with  # sign
-map <C-k>[ :let old_src = @/<CR>:s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>
-map <C-k>] :let old_src = @/<CR>:s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>
-imap <C-k>[ <Esc>:let old_src = @/<CR>:s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>a
-imap <C-k>] <Esc>:let old_src = @/<CR>:s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>a
+"map <C-k>[ :let old_src = @/<CR>:s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+"map <C-k>] :let old_src = @/<CR>:s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+"imap <C-k>[ <Esc>:let old_src = @/<CR>:s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>a
+"imap <C-k>] <Esc>:let old_src = @/<CR>:s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>a
+"
+"vmap <C-k>[ :<BS><BS><BS><BS><BS>let old_src = @/<CR>:'<,'>s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+"vmap <C-k>] :<BS><BS><BS><BS><BS>let old_src = @/<CR>:'<,'>s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>
+"
+"map <C-k><C-[> <C-k>[
+"map <C-k><C-]> <C-k>]
+"
+"imap <C-k><C-[> <C-k>[
+"imap <C-k><C-]> <C-k>]
 
-vmap <C-k>[ :<BS><BS><BS><BS><BS>let old_src = @/<CR>:'<,'>s/^/#/<CR>:nohlsearch<CR>:let @/ = old_src<CR>
-vmap <C-k>] :<BS><BS><BS><BS><BS>let old_src = @/<CR>:'<,'>s/^#//<CR>:nohlsearch<CR>:let @/ = old_src<CR>
-
-map <C-k><C-[> <C-k>[
-map <C-k><C-]> <C-k>]
-
-imap <C-k><C-[> <C-k>[
-imap <C-k><C-]> <C-k>]
-
-
-map <Leader>trailing :%s/\s*$//<CR>
-map <Leader>$ :%s/\s*$//<CR>
 
 set wildignore=*.o,*.obj,*.beam
 
@@ -198,7 +198,7 @@ cab bdd bp\|bd #
 "  mix xref warnings
 "
 
-function! s:ShowXRef() 
+function! s:ShowXRef()
   " does not work well right now :)
   let a=alchemist#get_current_module_details()['module']['name']
   let b=tagbar#currenttag('%s', '')
