@@ -21,7 +21,7 @@ Items marked with x are done.
  x compile time errors and jump to them
  x quickfix support for ExUnit test outputs + xterm integration (crashes/test fails)
  x test runner (test/test.watch) on project, file or current function
- * add switching between test/source file (`test file name == source + "_test.exs")
+ x add switching between test/source file (`test file name == source + "_test.exs")
 
  * templates for GenServer/GenStage/etc modules (may be also snipMate)
 

@@ -12,6 +12,7 @@ avoid laborious task of finding and tuning of plugins/themes.
   * Fuzzy search by function/module name in file
   * Fuzzy filename search in project
   * Navigation to Elixir/Erlang source code
+  * Jump between source and ExUnit test files automatically
  * Editing
   * Automatic folding of functions and tests
   * Line comment/uncomment shortcuts

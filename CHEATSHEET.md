@@ -15,6 +15,11 @@ shortcuts/commands:
     * `<Ctrl-v>` opens selected files in vertical split
     * `<Ctrl-s>` opens selected files in horizontal split
 
+ * `<Leader>xt` opens correlative source/test file
+ * `<Leader>xs` opens correlative source/test file in horizontal split
+ * `<Leader>xv` opens correlative source/test file in vertical split
+ * `<Leader>x!` opens correlative source/test, creates directories if necessary
+
  **In file**
  * `<F1>` shows Elixir docs for function under cursor.
  * `<Ctrl-@>` opens functions list for fuzzy search
@@ -91,6 +96,11 @@ shortcuts/commands:
  * `:cw` to open quickfix window
  * `]e` go to next error
  * `[e` go to previous error
+
+ * `<Leader>xt` opens correlative source/test file
+ * `<Leader>xs` opens correlative source/test file in horizontal split
+ * `<Leader>xv` opens correlative source/test file in vertical split
+ * `<Leader>x!` opens correlative source/test, creates directories if necessary
 
 #### Git integration
  * `:Gstatus` - show modified files and staged status
