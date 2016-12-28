@@ -53,6 +53,7 @@ shortcuts/commands:
  * `zR` to open all folds.
  * `zM` to close all folds.
  * `<Ctrl-K><Ctrl-L>` highlight word under cursor in whole file.
+ * `<Ctrl-K><Ctrl-I>` will toggle indent lines if you need to copy text.
  
  * `<Ctrl-K><Ctrl-P>` toggles comment on current line/selection
  * `<Ctrl-K><Ctrl-[>` adds comment on current line/selection

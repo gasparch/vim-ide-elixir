@@ -34,12 +34,16 @@ function! vimide#setDefaults() " {{{
   end
 
   call s:setGlobal('g:vimide_manage_vimdiff', 1)
+  call s:setGlobal('g:vimide_manage_encoding', 1)
   call s:setGlobal('g:vimide_manage_folds', 1)
   call s:setGlobal('g:vimide_manage_restore', 1)
   call s:setGlobal('g:vimide_manage_airline', 1)
+  call s:setGlobal('g:vimide_manage_indentline', 1)
   call s:setGlobal('g:vimide_install_comment_shortcuts', 1)
+  call s:setGlobal('g:vimide_install_align_shortcuts', 1)
   call s:setGlobal('g:vimide_install_other_shortcuts', 1)
   call s:setGlobal('g:vimide_manage_misc_settings', 1)
+  call s:setGlobal('g:vimide_install_hack_font', 1)
 endfunction " }}}
 
 function! vimide#init() " {{{
@@ -53,6 +57,7 @@ endfunction " }}}
 function! vimide#boot(setGlobal) " {{{
   if !s:VIMIDE_BOOT_FINISHED
     if g:vimide_colorscheme != ''         | call vimide#setColorscheme(a:setGlobal)          | endif
+    if g:vimide_manage_encoding           | call vimide#setVimEncodingSettings(a:setGlobal)  | endif
     if g:vimide_manage_indents            | call vimide#setIndentSettings(a:setGlobal)       | endif
     if g:vimide_manage_search             | call vimide#setSearchSettings(a:setGlobal)       | endif
     if g:vimide_manage_completition       | call vimide#setCompletitionSettings(a:setGlobal) | endif
@@ -61,8 +66,11 @@ function! vimide#boot(setGlobal) " {{{
     if g:vimide_manage_vimdiff            | call vimide#setVimDiffSettings(a:setGlobal)      | endif
     if g:vimide_manage_folds              | call vimide#setFoldsSettings(a:setGlobal)        | endif
     if g:vimide_manage_restore            | call vimide#setRestoreSettings(a:setGlobal)      | endif
+    if g:vimide_manage_indentline         | call vimide#setIndentLineSettigns(a:setGlobal)   | endif
     if g:vimide_install_comment_shortcuts | call vimide#setCommentShortcuts(a:setGlobal)     | endif
+    if g:vimide_install_align_shortcuts   | call vimide#setTabularizeShortcuts(a:setGlobal)  | endif
     if g:vimide_install_other_shortcuts   | call vimide#setOtherShortcuts(a:setGlobal)       | endif
+    if g:vimide_install_hack_font         | call vimide#setHackFont(a:setGlobal)             | endif
     if g:vimide_manage_misc_settings      | call vimide#setMiscSettings(a:setGlobal)         | endif
     let s:VIMIDE_BOOT_FINISHED = 1
   endif
@@ -72,6 +80,16 @@ function! vimide#boot(setGlobal) " {{{
   endif
 
 endfunction " }}}
+
+function! vimide#setVimEncodingSettings(setGlobal) "{{{
+  if a:setGlobal
+    set encoding=utf-8
+    set termencoding=utf-8
+  else
+    setlocal encoding=utf-8
+    setlocal termencoding=utf-8
+  endif
+endfunction "}}}
 
 function! vimide#setIndentSettings(setGlobal) "{{{
   if a:setGlobal
@@ -202,6 +220,21 @@ function! vimide#setAirlineSettings(setGlobal) "{{{
   endif
 endfunction "}}}
 
+function! vimide#setIndentLineSettigns(setGlobal) "{{{
+  " can manage indentonly globally
+  if a:setGlobal
+    let g:indentLine_char = '⋮'
+    let g:indentLine_color_gui = '#000000'
+    nnoremap <silent> <C-K><C-I> :IndentLinesToggle<CR>
+    " let g:indentLine_char = '⎥' straigh line
+    " let g:indentLine_char = '⎸' (needs FreeSerif)
+  else
+    " TODO: add BufferEnter/Exit logic to toggle indentLine only in elixir
+    " buffers
+    let pass = 1
+  endif
+endfunction "}}}
+
 function! vimide#setFoldsSettings(setGlobal) "{{{
   if a:setGlobal
     com! VimIDEToggleFold call vimide#toggleFold()
@@ -268,6 +301,29 @@ function! vimide#setCommentShortcuts(setGlobal) " {{{
   endif
 endfunction " }}}
 
+function! vimide#setTabularizeShortcuts(setGlobal) " {{{
+  " ####################################################################
+  " Integration with Tabularize
+
+  if a:setGlobal
+    " tabularize both => and =
+    map <Leader>= =:Tabularize /=><CR>
+    map <Leader>eq =:Tabularize /=/<CR>
+    " tabularize case clauses
+    map <Leader>- =:Tabularize /-><CR>
+    " tabularize : in hashmaps and similar
+    map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
+  else
+    " tabularize both => and =
+    map <buffer> <Leader>= =:Tabularize /=><CR>
+    map <buffer> <Leader>eq =:Tabularize /=/<CR>
+    " tabularize case clauses
+    map <buffer> <Leader>- =:Tabularize /-><CR>
+    " tabularize : in hashmaps and similar
+    map <buffer> <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
+  endif
+endfunction " }}}
+
 function! vimide#setOtherShortcuts(setGlobal) " {{{
   let isGvim = has("gui_running")
   if a:setGlobal
@@ -279,6 +335,61 @@ function! vimide#setOtherShortcuts(setGlobal) " {{{
       noremap map ZZ :w<CR>:bd<CR>
       exec "noremap <silent> <C-X> :silent !" . g:vimide_terminal . "&<CR>"
     end
+
+    " general Tagbar integration
+    " keyboard shortcuts
+    nmap <F4> :TagbarToggle<CR>
+    nmap <C-@> :CtrlPTagbar<CR>
+    nmap <Leader>l :CtrlPLine<CR>
+
+    " save file like in `borland-ides`
+    nmap <F2> :w<CR>
+    imap <F2> <Esc>:w<CR>a
+
+    " lookup item under the cursor in file and show the list of
+    " entries
+    "
+    " map ctrl-enter to jump to n-th match in list (gvim)
+    map <C-CR> [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+    " for vim
+    map <Leader>;; [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+
+    map <C-K><C-l> :exec 'match NonText /\<' . expand("<cword>") . '\>/'<CR>
+
+    " delete buffer and keep split
+    " cannot have it local
+    cab bdd bp\|bd #
+
+    " refactoring support
+    map <C-K><C-w> :%s#\<<c-r><c-w>\>#
+    map <C-K><C-a> :%s#\<<c-r><c-a>\>#
+
+    " -------------------------------------------------------
+    " buffer management commands
+    "
+    " buffer switch commands for *normal* mode
+    nmap <C-space><Left> :bN<CR>
+    nmap <C-space><Right> :bn<CR>
+    nmap <C-space><Down> :wa<CR>
+    nmap <C-space><Up> :bd<CR>
+
+    " buffer switch commands for *insert* mode
+    imap <C-space><Left> <Esc>:bN<CR>a
+    imap <C-space><Right> <Esc>:bn<CR>a
+    imap <C-space><Down> <Esc>:wa<CR>a
+    imap <C-space><Up> <Esc>:bd<CR>a
+    " mapping to allow keep Ctrl key presed when issuing commands
+    map <C-Space><C-Left> <C-Space><Left>
+    map <C-Space><C-Right> <C-Space><Right>
+    map <C-Space><C-Down> <C-Space><Down>
+    map <C-Space><C-Up> <C-Space><Up>
+
+    " list all buffers
+    nmap <C-Space><Space> :buffers<CR>
+    imap <C-Space><Space> <Esc>:buffers<CR>a
+    map <C-Space><C-Space> <C-Space><Space>
+
+    map <F11> <C-space><Left>
   else
     noremap <buffer> <F3> :VimIDEToggleFold<CR>
     noremap <buffer> <silent> <Leader>trailing :call vimide#stripTrailingWhitespace()<CR>
@@ -288,6 +399,39 @@ function! vimide#setOtherShortcuts(setGlobal) " {{{
       noremap <buffer> map ZZ :w<CR>:bd<CR>
       exec "noremap <silent> <buffer> <C-X> :silent !" . g:vimide_terminal . "&<CR>"
     end
+
+    " general Tagbar integration
+    " keyboard shortcuts
+    nmap <buffer> <F4> :TagbarToggle<CR>
+    nmap <buffer> <C-@> :CtrlPTagbar<CR>
+    nmap <buffer> <Leader>l :CtrlPLine<CR>
+
+    " save file like in `borland-ides`
+    nmap <buffer> <F2> :w<CR>
+    imap <buffer> <F2> <Esc>:w<CR>a
+
+    " lookup item under the cursor in file and show the list of
+    " entries
+    "
+    " map ctrl-enter to jump to n-th match in list (gvim)
+    map <buffer> <C-CR> [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+    " for vim
+    map <buffer> <Leader>;; [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
+
+    map <buffer> <C-K><C-l> :exec 'match NonText /\<' . expand("<cword>") . '\>/'<CR>
+  endif
+endfunction " }}}
+
+function! vimide#setHackFont(setGlobal) " {{{
+  let isGvim = has("gui_running")
+  if a:setGlobal && isGvim
+    set guifont=Hack\ 10
+
+    map <Leader>--- :set guifont=Ubuntu\ Mono\ 9<CR>
+    map <Leader>-- :set guifont=Ubuntu\ Mono\ 10<CR>
+    map <Leader>0 :set guifont=Hack\ 10<CR>
+    map <Leader>++ :set guifont=Hack\ 11<CR>
+    map <Leader>+++ :set guifont=Hack\ 12<CR>
   endif
 endfunction " }}}
 
@@ -295,8 +439,17 @@ function! vimide#setMiscSettings(setGlobal) " {{{
   "let isGvim = has("gui_running")
   if a:setGlobal
     set updatetime=500
+    set wildignore=*.o,*.obj,*.beam,*.swp
     "TODO: set guioptions-=T  "remove toolbar until we know what useful buttons put
     "on it ;-)
+    set backspace=indent,eol,start
+    set showmatch
+    set matchtime=2
+  else
+    setlocal wildignore=*.o,*.obj,*.beam,*.swp
+    setlocal backspace=indent,eol,start
+    setlocal showmatch
+    setlocal matchtime=2
 
   endif
 endfunction " }}}

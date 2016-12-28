@@ -121,29 +121,6 @@ let g:tagbar_type_elixir = {
     \ ]
 \ }
 
-
-" general Tagbar integration
-" keyboard shortcuts
-nmap <F4> :TagbarToggle<CR>
-nmap <C-@> :CtrlPTagbar<CR>
-nmap <Leader>l :CtrlPLine<CR>
-
-
-" ####################################################################
-" Integration with Tabularize
-
-
-" tabularize both => and =
-map <Leader>= =:Tabularize /=><CR>
-map <Leader>eq =:Tabularize /=/<CR>
-" tabularize case clauses
-map <Leader>- =:Tabularize /-><CR>
-" tabularize hashmaps and similar
-map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
-
-
-
-
 " ####################################################################
 " Elixir commenting/uncommenting shortcuts
 
@@ -166,31 +143,6 @@ map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
 "
 "imap <C-k><C-[> <C-k>[
 "imap <C-k><C-]> <C-k>]
-
-
-set wildignore=*.o,*.obj,*.beam,*.swp
-
-" save file like in `borland-ides`
-nmap <F2> :w<CR>
-imap <F2> <Esc>:w<CR>a
-
-" refactoring support
-map <C-K><C-w> :%s#\<<c-r><c-w>\>#
-map <C-K><C-a> :%s#\<<c-r><c-a>\>#
-
-" lookup item under the cursor in file and show the list of
-" entries
-"
-" map ctrl-enter to jump to n-th match in list (gvim)
-map <C-CR> [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-" for vim
-map <Leader>;; [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-
-map <C-K><C-l> :exec 'match NonText /\<' . expand("<cword>") . '\>/'<CR>
-
-
-" delete buffer and keep split
-cab bdd bp\|bd #
 
 " cross reference
 "

@@ -12,9 +12,9 @@ Items marked with x are done.
 
 ## Functionality
  * make it load w/reasonable defaults in empty vim (top)
- * add indentLine plugin to bundle (top)
  * add sensibleDefaults plugin
- * setup Hack font for GUI + size changes
+ x add indentLine plugin to bundle (top)
+ x setup Hack font for GUI + size changes
 
 ## Editing
 
