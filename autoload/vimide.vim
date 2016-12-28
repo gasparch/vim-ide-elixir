@@ -15,7 +15,11 @@ function! vimide#setDefaults() " {{{
   " set to '' disable managing themes
   call s:SetGlobal('g:vimide_colorscheme', 'hybrid/desert')
 
-  call s:SetGlobal('g:vimide_terminal', 'xterm')
+  call s:setGlobal('g:vimide_terminal', 'xterm')
+  call s:setGlobal('g:vimide_terminal_run_args', "-title %TITLE% -e %CMD% ")
+  " ESC sequence to change terminal title
+  " like :r!echo -n "\033]0;${USER}@${HOST}\007"
+  call s:setGlobal('g:vimide_terminal_title_change', "]0;%TITLE%")
 
   if !exists('&undodir')
     if !exists('g:vimide_manage_vimundo') | let g:vimide_manage_vimundo = 1 | en

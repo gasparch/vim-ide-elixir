@@ -43,3 +43,6 @@
 [submodule "bundle/nerdcommenter"]
 	path = bundle/nerdcommenter
 	url = https://github.com/scrooloose/nerdcommenter.git
+[submodule "bundle/vim-elixir-exunit"]
+	path = bundle/vim-elixir-exunit
+	url = https://github.com/gasparch/vim-elixir-exunit.git
