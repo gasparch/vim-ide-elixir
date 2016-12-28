@@ -46,3 +46,9 @@
 [submodule "bundle/vim-elixir-exunit"]
 	path = bundle/vim-elixir-exunit
 	url = https://github.com/gasparch/vim-elixir-exunit.git
+[submodule "bundle/vim-hybrid"]
+	path = bundle/vim-hybrid
+	url = https://github.com/w0ng/vim-hybrid
+[submodule "bundle/indentLine"]
+	path = bundle/indentLine
+	url = https://github.com/Yggdroot/indentLine.git
