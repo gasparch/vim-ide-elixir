@@ -8,7 +8,8 @@ Items marked with x are done.
  x scripts to download/install powerline fonts
  x scripts to download/install Hack font
  * scripts to pull updates (and switch submodules automatically)
- * make sure it is totally usable standalone, so I can attract testers
+ * make sure it is totally usable standalone, so that I can attract testers
+   * test on our team first ;)))
 
 ## Functionality
  * make it load w/reasonable defaults in empty vim (top)
@@ -30,7 +31,7 @@ Items marked with x are done.
  * syntax highlight for fprof dump file
  * syntax highlight for eprof dump file
 
- * snippets for ExUnit tests (integrate snipMate)
+ * snippets for ExUnit tests (integrate snipMate) + automatically get module name from alchemist.vim
  * snippets for GenServer callbacks
  * snippets for def/depf/defmodule
 
@@ -49,8 +50,8 @@ Items marked with x are done.
 
 ## Navigation
 
- * faster in-file navigation (ctags?) (top)
- * clone tagbar and create cross reference browsing plugin (based on mix output)
+ * faster in-file navigation (ctags?) (top) or fix alchemist :)
+ * clone tagbar and create cross reference browsing plugin (based on mix xref output)
  * make tagbar use alchemist.vim for getting tag information from file
 
 ## Syntax autofixes
@@ -68,7 +69,7 @@ Items marked with x are done.
  * build code prefix trees to find (structurally same) duplicate code blocks
 
 ## Documentation
- * based on credo - add @moduledoc tags
+ * based on credo - automatically add @moduledoc tags
  * automatic guessing of signatures from debug traces and generation of @spec
 
 ## Erlang support!!!
