@@ -5,15 +5,15 @@
 let s:VIMIDE_BOOT_FINISHED = 0
 
 function! vimide#setDefaults() " {{{
-  call s:SetGlobal('g:vimide_global_enable', 0)
-  call s:SetGlobal('g:vimide_manage_indents', 1)
-  call s:SetGlobal('g:vimide_manage_search', 1)
-  call s:SetGlobal('g:vimide_manage_completition', 1)
+  call s:setGlobal('g:vimide_global_enable', 0)
+  call s:setGlobal('g:vimide_manage_indents', 1)
+  call s:setGlobal('g:vimide_manage_search', 1)
+  call s:setGlobal('g:vimide_manage_completition', 1)
 
   "
   " may use different themes for console/gui (console/gui)
   " set to '' disable managing themes
-  call s:SetGlobal('g:vimide_colorscheme', 'hybrid/desert')
+  call s:setGlobal('g:vimide_colorscheme', 'hybrid/desert')
 
   call s:setGlobal('g:vimide_terminal', 'xterm')
   call s:setGlobal('g:vimide_terminal_run_args', "-title %TITLE% -e %CMD% ")
@@ -33,13 +33,13 @@ function! vimide#setDefaults() " {{{
     let g:vimide_manage_vimbackup = 0
   end
 
-  call s:SetGlobal('g:vimide_manage_vimdiff', 1)
-  call s:SetGlobal('g:vimide_manage_folds', 1)
-  call s:SetGlobal('g:vimide_manage_restore', 1)
-  call s:SetGlobal('g:vimide_manage_airline', 1)
-  call s:SetGlobal('g:vimide_install_comment_shortcuts', 1)
-  call s:SetGlobal('g:vimide_install_other_shortcuts', 1)
-  call s:SetGlobal('g:vimide_manage_misc_settings', 1)
+  call s:setGlobal('g:vimide_manage_vimdiff', 1)
+  call s:setGlobal('g:vimide_manage_folds', 1)
+  call s:setGlobal('g:vimide_manage_restore', 1)
+  call s:setGlobal('g:vimide_manage_airline', 1)
+  call s:setGlobal('g:vimide_install_comment_shortcuts', 1)
+  call s:setGlobal('g:vimide_install_other_shortcuts', 1)
+  call s:setGlobal('g:vimide_manage_misc_settings', 1)
 endfunction " }}}
 
 function! vimide#init() " {{{
@@ -351,7 +351,7 @@ function! vimide#stripTrailingWhitespace() " {{{
   call winrestview(l:save)
 endfunction " }}}
 
-function! s:SetGlobal(name, default) " {{{
+function! s:setGlobal(name, default) " {{{
   if !exists(a:name)
     if type(a:name) == 0 || type(a:name) == 5
       exec "let " . a:name . " = " . a:default
