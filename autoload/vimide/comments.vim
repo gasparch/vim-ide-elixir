@@ -5,7 +5,7 @@
 function vimide#comments#wrap(mode, target) range
   if a:mode == 'x' 
     call NERDComment(a:mode, a:target)
-  elseif foldlevel('.') == 0 
+  elseif foldclosed('.') == -1
     call NERDComment(a:mode, a:target)
   else
     let foldStart = foldclosed('.')
