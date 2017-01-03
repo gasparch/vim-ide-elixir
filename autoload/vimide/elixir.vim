@@ -1,4 +1,4 @@
 
 function vimide#elixir#boot()
-  setlocal wildignore=*.beam
+  setlocal wildignore+=*.beam
 endfunction

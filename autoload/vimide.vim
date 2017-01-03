@@ -38,6 +38,7 @@ function! vimide#setDefaults() " {{{
   call s:setGlobal('g:vimide_manage_folds', 1)
   call s:setGlobal('g:vimide_manage_restore', 1)
   call s:setGlobal('g:vimide_manage_airline', 1)
+  call s:setGlobal('g:vimide_manage_ctrlp', 1)
   call s:setGlobal('g:vimide_manage_indentline', 1)
   call s:setGlobal('g:vimide_install_comment_shortcuts', 1)
   call s:setGlobal('g:vimide_install_align_shortcuts', 1)
@@ -67,6 +68,7 @@ function! vimide#boot(setGlobal) " {{{
     if g:vimide_manage_folds              | call vimide#setFoldsSettings(a:setGlobal)        | endif
     if g:vimide_manage_restore            | call vimide#setRestoreSettings(a:setGlobal)      | endif
     if g:vimide_manage_indentline         | call vimide#setIndentLineSettigns(a:setGlobal)   | endif
+    if g:vimide_manage_ctrlp              | call vimide#setCtrlPSettings(a:setGlobal)        | endif
     if g:vimide_install_comment_shortcuts | call vimide#setCommentShortcuts(a:setGlobal)     | endif
     if g:vimide_install_align_shortcuts   | call vimide#setTabularizeShortcuts(a:setGlobal)  | endif
     if g:vimide_install_other_shortcuts   | call vimide#setOtherShortcuts(a:setGlobal)       | endif
@@ -231,6 +233,29 @@ function! vimide#setIndentLineSettigns(setGlobal) "{{{
   else
     " TODO: add BufferEnter/Exit logic to toggle indentLine only in elixir
     " buffers
+    let pass = 1
+  endif
+endfunction "}}}
+
+function! vimide#setCtrlPSettings(setGlobal) "{{{
+  " can manage CtrlP only globally
+  if a:setGlobal
+    let g:ctrlp_custom_ignore = {
+          \ 'dir': 'node_modules|\v[\/]\.(git|hg|svn)$'
+    \}
+    let g:ctrlp_user_command = {
+          \ 'types': {
+            \ 1: ['.git', 'cd %s && git ls-files -co --exclude-standard'],
+            \ 2: ['.hg', 'hg --cwd %s locate -I .'],
+          \ },
+        \ 'ignore': 1
+        \ }
+        "\ 'fallback': 'find %s -type f',
+    let g:ctrlp_extensions = ['line', 'tagbar']
+    let g:ctrlp_root_markers = ['mix.exs']
+  else
+    " TODO: add BufferEnter/Exit logic to manage b:ctrlp_user_command only in
+    " elixir buffers
     let pass = 1
   endif
 endfunction "}}}
