@@ -102,6 +102,22 @@ shortcuts/commands:
  * `<Leader>tv` opens correlative source/test file in vertical split
  * `<Leader>t!` opens correlative source/test, creates directories if necessary
 
+#### Tracing
+ * `<Leader>te` execute ExUnit test under cursor with tracing and window with
+   trace output
+ * `<Leader>ts` execute selected text with tracing and show trace
+
+ **In trace window**
+ * `<Enter>` opens file with module/function under cursor and changes window
+ * `p` opens file with module/function under cursor and stays in trace window
+ * `%` jumps to matching call/return lines
+ * `;`, `,` jumps back/forward to same function call
+ * `(`, `)` jumps back/forward to next function call/return (skips messages)
+ * `{`, `}` jumps back/forward over repeated function calls
+ * `F3` opens arguments fold; also when cursor is on function call/ret line
+
+ More on [vim-elixir-smarttrace page](https://github.com/gasparch/vim-elixir-smarttrace).
+
 #### Git integration
  * `:Gstatus` - show modified files and staged status
     * `-` (in normal mode) on file name moves between staged/unstaged mode

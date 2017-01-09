@@ -24,9 +24,12 @@ avoid laborious task of finding and tuning of plugins/themes.
   * Compile project from and jump to errors/warnings
   * Run ExUnit tests and jump to errors
   * Run ExUnit tests on source save and just to errors
+ * Tracing
+  * Run trace on selected ExUnit test or text selection
+  * Quickly navigate in trace file
  * Other
   * Colorschemes for Elixir programming
-  * Git integration directly from Vim.
+  * Git integration directly from Vim
   * Viewing of Module/function documentation
   * Restore buffer position on load
   * Clutter free vim-airline settings
@@ -115,6 +118,8 @@ file using [vim-sleuth](https://github.com/tpope/vim-sleuth).
 
 Tagbar most of the time shows correct arity on functions and does not report
 multiple function clauses.  GenServer callbacks moved to separate group.
+
+ * `F4` will toggle Tagbar window visibility.
 
 ## Compiler and ExUnit integration
 
@@ -209,7 +214,6 @@ Following commands and shortcuts are available:
 
  Use `[e` and `]e` to navigate test errors.
 
-
  **Note**
 
  All `mix test` commands executed with `--seed 0` parameter which forces
@@ -217,8 +221,50 @@ Following commands and shortcuts are available:
  sequence to check hidden errors in tests - you will need to run tests
  manually.
 
+## Tracing support
+
+ Erlang runtime has amazing tools to understand what happens in code using trace
+ and profiling. Unfortumately they have just command line interface and
+ sometimes output is hard to understand. Vim-Elixir-IDE aims to boost developer
+ efficiency while using this tools.
+
+#### Running trace
+
+ You can run trace on arbitrary piece of code or existing ExUnit test case. I
+ would recommend running it on ExUnit test, which assures that all aliases,
+ variables are resolved. If you run trace on code selection it should be
+ self-sufficient (it will be copied to separate .exs file).
+
+ So, once again, run ExUnit tests under tracing, not the selection :)
+
+ Tracing support removes some number of redundant messages appearing in trace
+ log file and tries to make output more readable to human eyes and for
+ inspection.
+
+ Also navigating around trace may be difficult, as there is so much information
+ present, so navigation shortcuts are provided for that.
+
+ Available commands: 
+ 
+ * `ErlTraceTest` or `<Leader>te` runs ExUnit test under cursor with tracing
+   enabled and shows resulting trace in separate window.
+ * `ErlTraceSelection` or `<Leader>ts` runs selected test with tracing enabled
+   and shows resulting trace in separate window.
+
+ In tracing window there are shortcuts available:
+
+ * `<Enter>` opens file with module/function under cursor and switches window
+ * `p` opens file with module/function under cursor and stays in trace window
+ * `%` jumps to matching call/return lines
+ * `;`, `,` jumps back/forward to same function call
+ * `(`, `)` jumps back/forward to next function call/return (skips messages)
+ * `{`, `}` jumps back/forward over repeated function calls
+ * `F3` opens arguments fold; also when cursor is on function call/ret line
+
+
 
  
+
 
 
 

@@ -52,3 +52,6 @@
 [submodule "bundle/indentLine"]
 	path = bundle/indentLine
 	url = https://github.com/Yggdroot/indentLine.git
+[submodule "bundle/vim-elixir-smarttrace"]
+	path = bundle/vim-elixir-smarttrace
+	url = https://github.com/gasparch/vim-elixir-smarttrace.git
