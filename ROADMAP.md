@@ -13,12 +13,11 @@ Items marked with x are done.
 
 ## Functionality
  * make it load w/reasonable defaults in empty vim (top)
- * add sensibleDefaults plugin
+ * add tpope/sensibleDefaults plugin
  x add indentLine plugin to bundle (top)
  x setup Hack font for GUI + size changes
 
 ## Editing
-
  x compile time errors and jump to them
  x quickfix support for ExUnit test outputs + xterm integration (crashes/test fails)
  x test runner (test/test.watch) on project, file or current function
@@ -26,16 +25,11 @@ Items marked with x are done.
 
  * templates for GenServer/GenStage/etc modules (may be also snipMate)
 
- * highlight current identificator under cursor in function
-
- * syntax highlight for fprof dump file
- * syntax highlight for eprof dump file
+ * highlight current identificator under cursor in function/clause
 
  * snippets for ExUnit tests (integrate snipMate) + automatically get module name from alchemist.vim
  * snippets for GenServer callbacks
  * snippets for def/depf/defmodule
-
- * snippets for tracing fprof/eprof with some meaningful defaults
 
  * syntax highlights for style problems (missing spaces, too much space,
      trailing space, etc) (low)
@@ -46,31 +40,50 @@ Items marked with x are done.
  * better syntax highlight for console (desert-style) (low) 
  * signs on left edge - syntax highlight for ExUnit test outputs (crashes/test fails) (low)
 
- * nested level syntax highlight (like in https://github.com/bigfish/vim-js-context-coloring)
+ * nested level syntax highlight (like in
+       https://github.com/bigfish/vim-js-context-coloring , see video there too)
+
+## Debuging & developing
+ * generate trace files and nicely show them
+   * run test clause and record call/return values/messages trace
+   * syntax/highlighting for trace file
+   * allow jumping to functions/clauses in trace/profile files
+   * shortcuts to trace selection/test
+   * run test clause and record line-by-line execution trace using debugger (low)
+ * run test clause and record fprof for it
+ * syntax highlight for fprof dump file
+ * run test clause and record eprof for it
+ * syntax highlight for eprof dump file
+ * snippets for tracing fprof/eprof with some meaningful defaults (low)
 
 ## Navigation
-
  * faster in-file navigation (ctags?) (top) or fix alchemist :)
  * clone tagbar and create cross reference browsing plugin (based on mix xref output)
  * make tagbar use alchemist.vim for getting tag information from file
 
 ## Syntax autofixes
-
  * fix unused variables warnings automatically
  * integrate with dogma
  * integrate with credo + autocorrection of problems (spacing/indents/arguments definitions and etc)
 
 ## Refactoring
-
  * variable renaming in single function clause
  * renaming of GenServer call atoms
  * renaming all function clauses + callers (using xref)
  * plugin to find large pieces of commented out code, which is not documentation
  * build code prefix trees to find (structurally same) duplicate code blocks
+ * detect and visualize code circular dependencies
 
 ## Documentation
  * based on credo - automatically add @moduledoc tags
  * automatic guessing of signatures from debug traces and generation of @spec
+   (run all text suites or current file and record calling trace information,
+    then extract smartly types of arguments)
+
+## GUI
+ * add menus for all functions provided
+ * add toolbars for most common functions
+ * think of actively using baloons for better context-help
 
 ## Erlang support!!!
  * support erlang syntax highlighting/source navigation/etc

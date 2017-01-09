@@ -97,10 +97,10 @@ shortcuts/commands:
  * `]e` go to next error
  * `[e` go to previous error
 
- * `<Leader>xt` opens correlative source/test file
- * `<Leader>xs` opens correlative source/test file in horizontal split
- * `<Leader>xv` opens correlative source/test file in vertical split
- * `<Leader>x!` opens correlative source/test, creates directories if necessary
+ * `<Leader>tt` opens correlative source/test file
+ * `<Leader>ts` opens correlative source/test file in horizontal split
+ * `<Leader>tv` opens correlative source/test file in vertical split
+ * `<Leader>t!` opens correlative source/test, creates directories if necessary
 
 #### Git integration
  * `:Gstatus` - show modified files and staged status
