@@ -10,9 +10,6 @@
 [submodule "bundle/tabular"]
 	path = bundle/tabular
 	url = https://github.com/godlygeek/tabular.git
-[submodule "bundle/alchemist.vim"]
-	path = bundle/alchemist.vim
-	url = https://github.com/slashmili/alchemist.vim.git
 [submodule "bundle/matchit"]
 	path = bundle/matchit
 	url = https://github.com/tmhedberg/matchit
@@ -55,3 +52,6 @@
 [submodule "bundle/vim-elixir-smarttrace"]
 	path = bundle/vim-elixir-smarttrace
 	url = https://github.com/gasparch/vim-elixir-smarttrace.git
+[submodule "bundle/alchemist.vim"]
+	path = bundle/alchemist.vim
+	url = https://github.com/gasparch/alchemist.vim
