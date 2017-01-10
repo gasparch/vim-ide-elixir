@@ -4,6 +4,17 @@
 
 let s:VIMIDE_BOOT_FINISHED = 0
 
+let s:rootPath = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
+let s:bundlePath = s:rootPath . "/bundle"
+
+function! vimide#getRootPath() " {{{
+  return s:rootPath
+endfunction " }}}
+
+function! vimide#getBundlePath() " {{{
+  return s:bundlePath
+endfunction " }}}
+
 function! vimide#setDefaults() " {{{
   call s:setGlobal('g:vimide_global_enable', 0)
   call s:setGlobal('g:vimide_manage_indents', 1)
@@ -43,6 +54,7 @@ function! vimide#setDefaults() " {{{
   call s:setGlobal('g:vimide_install_comment_shortcuts', 1)
   call s:setGlobal('g:vimide_install_align_shortcuts', 1)
   call s:setGlobal('g:vimide_install_other_shortcuts', 1)
+  call s:setGlobal('g:vimide_install_elixir_shortcuts', 1)
   call s:setGlobal('g:vimide_manage_misc_settings', 1)
   call s:setGlobal('g:vimide_install_hack_font', 1)
 endfunction " }}}
@@ -56,7 +68,10 @@ function! vimide#init() " {{{
 endfunction " }}}
 
 function! vimide#boot(setGlobal) " {{{
-  if !s:VIMIDE_BOOT_FINISHED
+  let bootVarName = (a:setGlobal ? "s:VIMIDE_BOOT_FINISHED" : "b:VIMIDE_BOOT_FINISHED")
+  let bootFinished =  s:VIMIDE_BOOT_FINISHED || (exists(bootVarName) && execute("echo ".bootVarName) == 1)
+
+  if !bootFinished
     if g:vimide_colorscheme != ''         | call vimide#setColorscheme(a:setGlobal)          | endif
     if g:vimide_manage_encoding           | call vimide#setVimEncodingSettings(a:setGlobal)  | endif
     if g:vimide_manage_indents            | call vimide#setIndentSettings(a:setGlobal)       | endif
@@ -74,10 +89,12 @@ function! vimide#boot(setGlobal) " {{{
     if g:vimide_install_other_shortcuts   | call vimide#setOtherShortcuts(a:setGlobal)       | endif
     if g:vimide_install_hack_font         | call vimide#setHackFont(a:setGlobal)             | endif
     if g:vimide_manage_misc_settings      | call vimide#setMiscSettings(a:setGlobal)         | endif
-    let s:VIMIDE_BOOT_FINISHED = 1
+    execute("let " . bootVarName . "= 1")
   endif
 
   if &filetype == 'elixir'
+    " filetype specific initialization goes here, but it is basically very
+    " small piece of code
     call vimide#elixir#boot()
   endif
 
@@ -231,9 +248,7 @@ function! vimide#setIndentLineSettigns(setGlobal) "{{{
     " let g:indentLine_char = '⎥' straigh line
     " let g:indentLine_char = '⎸' (needs FreeSerif)
   else
-    " TODO: add BufferEnter/Exit logic to toggle indentLine only in elixir
-    " buffers
-    let pass = 1
+    nnoremap <silent> <buffer> <C-K><C-I> :IndentLinesToggle<CR>
   endif
 endfunction "}}}
 
@@ -295,6 +310,8 @@ function! vimide#setCommentShortcuts(setGlobal) " {{{
   " we want comments to be nicely aligned under each other and not follow
   " indentation
   let g:NERDDefaultAlign = "left"
+  let g:NERDCommentEmptyLines = 1
+
   " TODO: think of possibility leaving commented area in visual selected mode
   " (if it is good idea at all :)
   if a:setGlobal
@@ -330,22 +347,41 @@ function! vimide#setTabularizeShortcuts(setGlobal) " {{{
   " ####################################################################
   " Integration with Tabularize
 
+  " TODO: may be remove all indenting funcitonality alltogether, as it may be
+  " extremely annoying
+
   if a:setGlobal
     " tabularize both => and =
-    map <Leader>= =:Tabularize /=><CR>
-    map <Leader>eq =:Tabularize /=/<CR>
+    nmap <Leader>= ==:Tabularize /=><CR>
+    nmap <Leader>eq ==:Tabularize /=/<CR>
     " tabularize case clauses
-    map <Leader>- =:Tabularize /-><CR>
+    nmap <Leader>- ==:Tabularize /-><CR>
     " tabularize : in hashmaps and similar
-    map <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
+    nmap <Leader>: ==:Tabularize /\v(:)@<=\s/l0<CR>
+
+    " tabularize both => and =
+    vmap <Leader>= =:'<,'>Tabularize /=><CR>
+    vmap <Leader>eq =:'<,'>Tabularize /=/<CR>
+    " tabularize case clauses
+    vmap <Leader>- =:'<,'>Tabularize /-><CR>
+    " tabularize : in hashmaps and similar
+    vmap <Leader>: =:'<,'>Tabularize /\v(:)@<=\s/l0<CR>
   else
     " tabularize both => and =
-    map <buffer> <Leader>= =:Tabularize /=><CR>
-    map <buffer> <Leader>eq =:Tabularize /=/<CR>
+    nmap <buffer> <Leader>= ==:Tabularize /=><CR>
+    nmap <buffer> <Leader>eq ==:Tabularize /=/<CR>
     " tabularize case clauses
-    map <buffer> <Leader>- =:Tabularize /-><CR>
+    nmap <buffer> <Leader>- ==:Tabularize /-><CR>
     " tabularize : in hashmaps and similar
-    map <buffer> <Leader>: =:Tabularize /\v(:)@<=\s/l0<CR>
+    nmap <buffer> <Leader>: ==:Tabularize /\v(:)@<=\s/l0<CR>
+
+    " tabularize both => and =
+    vmap <buffer> <Leader>= =:'<,'>Tabularize /=><CR>
+    vmap <buffer> <Leader>eq =:'<,'>Tabularize /=/<CR>
+    " tabularize case clauses
+    vmap <buffer> <Leader>- =:'<,'>Tabularize /-><CR>
+    " tabularize : in hashmaps and similar
+    vmap <buffer> <Leader>: =:'<,'>Tabularize /\v(:)@<=\s/l0<CR>
   endif
 endfunction " }}}
 
@@ -382,7 +418,6 @@ function! vimide#setOtherShortcuts(setGlobal) " {{{
     map <C-K><C-l> :exec 'match NonText /\<' . expand("<cword>") . '\>/'<CR>
 
     " delete buffer and keep split
-    " cannot have it local
     cab bdd bp\|bd #
 
     " refactoring support
@@ -434,6 +469,9 @@ function! vimide#setOtherShortcuts(setGlobal) " {{{
     " save file like in `borland-ides`
     nmap <buffer> <F2> :w<CR>
     imap <buffer> <F2> <Esc>:w<CR>a
+
+    " delete buffer and keep split
+    cab <buffer> bdd bp\|bd #
 
     " lookup item under the cursor in file and show the list of
     " entries
@@ -529,6 +567,7 @@ function! vimide#stripTrailingWhitespace() " {{{
   call winrestview(l:save)
 endfunction " }}}
 
+" TODO: consolidate in lib
 function! s:setGlobal(name, default) " {{{
   if !exists(a:name)
     if type(a:name) == 0 || type(a:name) == 5

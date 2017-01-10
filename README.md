@@ -248,7 +248,7 @@ Following commands and shortcuts are available:
  
  * `ErlTraceTest` or `<Leader>te` runs ExUnit test under cursor with tracing
    enabled and shows resulting trace in separate window.
- * `ErlTraceSelection` or `<Leader>ts` runs selected test with tracing enabled
+ * `ErlTraceSelection` or `<Leader>ty` runs selected test with tracing enabled
    and shows resulting trace in separate window.
 
  In tracing window there are shortcuts available:

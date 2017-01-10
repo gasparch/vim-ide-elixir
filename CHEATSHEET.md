@@ -15,10 +15,8 @@ shortcuts/commands:
     * `<Ctrl-v>` opens selected files in vertical split
     * `<Ctrl-s>` opens selected files in horizontal split
 
- * `<Leader>xt` opens correlative source/test file
- * `<Leader>xs` opens correlative source/test file in horizontal split
- * `<Leader>xv` opens correlative source/test file in vertical split
- * `<Leader>x!` opens correlative source/test, creates directories if necessary
+ * `<Leader>tt` finds and opens correlative source/test file.
+   See more shortcuts in **ExUnit** section below.
 
  **In file**
  * `<F1>` shows Elixir docs for function under cursor.
@@ -47,6 +45,7 @@ shortcuts/commands:
  * `<Enter>` or click on function name takes you to function definition.
  * `<p>` on function name takes you to function definition, but focus stays in tagbar.
  * `<P>` on function name opens function in preview window.
+ * `<Ctrl-W><Ctrl-Z>` or `:pc` close preview window.
 
  More on [tagbar page](https://majutsushi.github.io/tagbar/).
 
@@ -104,8 +103,9 @@ shortcuts/commands:
 
 #### Tracing
  * `<Leader>te` execute ExUnit test under cursor with tracing and window with
-   trace output
- * `<Leader>ts` execute selected text with tracing and show trace
+   trace output (mnemonics: Trace Exunit)
+ * `<Leader>ty` execute selected text with tracing and show trace (mnemonics:
+   Trace Yanked).
 
  **In trace window**
  * `<Enter>` opens file with module/function under cursor and changes window

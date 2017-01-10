@@ -12,7 +12,7 @@ Items marked with x are done.
    * test on our team first ;)))
 
 ## Functionality
- * make it load w/reasonable defaults in empty vim (top)
+ x make it load w/reasonable defaults in empty vim (top)
  * add tpope/sensibleDefaults plugin
  x add indentLine plugin to bundle (top)
  x setup Hack font for GUI + size changes
@@ -45,10 +45,10 @@ Items marked with x are done.
 
 ## Debuging & developing
  * generate trace files and nicely show them
-   * run test clause and record call/return values/messages trace
-   * syntax/highlighting for trace file
-   * allow jumping to functions/clauses in trace/profile files
-   * shortcuts to trace selection/test
+   x run test clause and record call/return values/messages trace
+   x syntax/highlighting for trace file
+   x allow jumping to functions/clauses in trace/profile files
+   x shortcuts to trace selection/test
    * run test clause and record line-by-line execution trace using debugger (low)
  * run test clause and record fprof for it
  * syntax highlight for fprof dump file
