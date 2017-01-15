@@ -1,2 +1,5 @@
 sources/otp
 sources/elixir
+.current_release
+.seen_subscribe_question
+.last_update_ts
