@@ -5,6 +5,17 @@ Highly opinionated setup of plugins to start programming in Elixir in minutes.
 Aim of the project is to give reasonable preset of defaults for Elixir-based development to
 avoid laborious task of finding and tuning of plugins/themes.
 
+## Let's get in touch
+
+I’m a sucker for feedback. What do you think of this plugin after using it?
+Tell me! I have when things do nto work 'out-of-box' and eager to fix it!
+
+Please take 1 minute and subscribe to [mailing list](http://gasparchilingarov.com/vim-ide-updates/) to receive updates about
+the project. 
+
+You can contact me on [twitter](http://twitter.com/gasparch) and by email
+gasparch at gmail dot com.
+
 ## Features
  * Navigation
   * Jump to module/function definitions
@@ -65,7 +76,7 @@ cd ~/.vim/bundle/vim-ide-elixir
 ./install.sh
 ```
 
-Follow instructions of install script.
+Follow instructions of install script to complete install.
 
 **Manually install**
 
@@ -285,17 +296,3 @@ Following commands and shortcuts are available:
  * `(`, `)` jumps back/forward to next function call/return (skips messages)
  * `{`, `}` jumps back/forward over repeated function calls
  * `F3` opens arguments fold; also when cursor is on function call/ret line
-
-
-
- 
-
-
-
-
-
-
-
-
-
-

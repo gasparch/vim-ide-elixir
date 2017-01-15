@@ -17,8 +17,8 @@ function! vimide#getBundlePath() " {{{
 endfunction " }}}
 
 function! vimide#setDefaults() " {{{
-  call s:setGlobal('g:vimide_update_check_period', 24*60*60)
-  call s:setGlobal('g:vimide_update_channel', '') " valid values are production/beta
+  call s:setGlobal('g:vimide_update_check_period', 24*60*60) " check updates once a day
+  call s:setGlobal('g:vimide_update_channel', '') " valid values are production/beta/dev
 
   call s:setGlobal('g:vimide_global_enable', 0)
   call s:setGlobal('g:vimide_manage_indents', 1)
@@ -75,6 +75,7 @@ function! vimide#boot(setGlobal) " {{{
   " run update check just once on editor start
   if !s:UPDATE_CHECK_FINISHED
     call s:checkUpdates()
+    call s:checkSubscription()
     let s:UPDATE_CHECK_FINISHED = 1
   endif
 
@@ -626,4 +627,24 @@ function! s:checkUpdates() " {{{
 
   echo updateOutput
   call confirm("Restart Vim for updated version")
+endfunction " }}}
+
+function! s:checkSubscription() " {{{
+  let tsFileName = vimide#getRootPath() . "/.seen_subscribe_question"
+
+  let seenSubscribeCheck = file_readable(tsFileName)
+  if seenSubscribeCheck | return | endif
+
+  let msg = "Hi! Thank you for trying out Vim-IDE-Elixir.\n" .
+        \ "Your support is essential for project to stay alive and develop, \n" .
+        \ "so please take your time and subscribe to mailing list here: \n".
+        \ "http://gasparchilingarov.com/vim-ide-updates/ \n".
+        \ "\n" .
+        \ "Also send me your feedback in a few days after you use this plugin, please! \n" .
+        \ "\n" .
+        \ "This is one-time message, you can find subscription URL later in README.md."
+
+  let answer = confirm(msg)
+
+  call writefile([''], tsFileName, "w")
 endfunction " }}}
