@@ -109,6 +109,31 @@ cd ~/.vim/bundle/vim-ide-elixir
 ./update.sh
 ```
 
+## Autoupdate
+
+By default Vim-Elixir-IDE is setup to check once a day updates from production branch.
+
+You can control update check period by changing `g:vimide_update_check_period` time in seconds.
+E.g. for a once-a-week check:
+
+```vim
+let g:vimide_update_check_period = 7*24*60*60
+```
+
+Also you can control which update channel it will be checking. There are 3
+possible channels available:
+
+  * `production` will be released once in 6-8 weeks, most stable version.
+  * `beta`  will be released every 1-3 weeks, some things may break.
+  * `dev` follows master branch of repository, fetches updates as soon as they
+    available. Things may break more often.
+
+Set update channel by setting in your `.vimrc`
+
+```vim
+let g:vimide_update_channel = 'beta'
+```
+
 ## Editing
 
 Vim-Elixir-IDE tries to smart guess your tabulation settings and set it for the

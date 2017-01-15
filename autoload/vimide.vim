@@ -3,6 +3,7 @@
 "
 
 let s:VIMIDE_BOOT_FINISHED = 0
+let s:UPDATE_CHECK_FINISHED = 0
 
 let s:rootPath = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let s:bundlePath = s:rootPath . "/bundle"
@@ -16,6 +17,9 @@ function! vimide#getBundlePath() " {{{
 endfunction " }}}
 
 function! vimide#setDefaults() " {{{
+  call s:setGlobal('g:vimide_update_check_period', 24*60*60)
+  call s:setGlobal('g:vimide_update_channel', '') " valid values are production/beta
+
   call s:setGlobal('g:vimide_global_enable', 0)
   call s:setGlobal('g:vimide_manage_indents', 1)
   call s:setGlobal('g:vimide_manage_search', 1)
@@ -68,6 +72,12 @@ function! vimide#init() " {{{
 endfunction " }}}
 
 function! vimide#boot(setGlobal) " {{{
+  " run update check just once on editor start
+  if !s:UPDATE_CHECK_FINISHED
+    call s:checkUpdates()
+    let s:UPDATE_CHECK_FINISHED = 1
+  endif
+
   let bootVarName = (a:setGlobal ? "s:VIMIDE_BOOT_FINISHED" : "b:VIMIDE_BOOT_FINISHED")
   let bootFinished =  s:VIMIDE_BOOT_FINISHED || (exists(bootVarName) && execute("echo ".bootVarName) == 1)
 
@@ -576,4 +586,44 @@ function! s:setGlobal(name, default) " {{{
       exec "let " . a:name . " = '" . escape(a:default, "\'") . "'"
     endif
   endif
+endfunction " }}}
+
+function! s:checkUpdates() " {{{
+  " check now much times we run already
+  let currentTs = strftime("%s")
+
+  let tsFileName = vimide#getRootPath() . "/.last_update_ts"
+
+  let runUpdateCheck = 0
+  if !file_readable(tsFileName)
+    let runUpdateCheck = 1
+  else
+    let lastUpdateTs = join(readfile(tsFileName), "")
+    if lastUpdateTs + g:vimide_update_check_period < currentTs
+      runUpdateCheck = 1
+    endif
+  endif
+
+  if !runUpdateCheck | return | endif
+
+  call writefile([currentTs], tsFileName, "w")
+
+  let checkOutput = system(vimide#getRootPath() . "/check_update.sh " . g:vimide_update_channel)
+
+  if checkOutput !~ '^update,' | return | endif
+
+  let matches = split(checkOutput, ',')
+
+  let msg = "Update available for Vim-IDE-Elixir, version " . matches[3] . "\n" .
+        \ "Please cd " . vimide#getRootPath() . " and run \n".
+        \ "./update.sh " . g:vimide_update_channel . " "
+
+  let answer = confirm(msg, "&Run now,Run &manually later", -999)
+
+  if (answer != -999) | return | endif
+
+  let updateOutput = system(vimide#getRootPath() . "/update.sh " . g:vimide_update_channel)
+
+  echo updateOutput
+  call confirm("Restart Vim for updated version")
 endfunction " }}}
