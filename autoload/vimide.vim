@@ -601,7 +601,7 @@ function! s:checkUpdates() " {{{
   else
     let lastUpdateTs = join(readfile(tsFileName), "")
     if lastUpdateTs + g:vimide_update_check_period < currentTs
-      runUpdateCheck = 1
+      let runUpdateCheck = 1
     endif
   endif
 
