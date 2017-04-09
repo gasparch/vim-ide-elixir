@@ -16,13 +16,42 @@ endfunction
 "let g:ConqueTerm_CloseOnEnd=1
 "let g:alchemist_iex_term_size = 15
 
-function! vimide#elixir#tagbarFilter(tags) " {{{
-  " remove OTP callbacks from ordinary function list
-  call filter(a:tags, ' !(v:val.fields.kind == "f" && v:val.name =~ "\\v(handle_call|handle_info|handle_cast|init|terminate)") ')
 
-  function! Arity_extract(idx, tag)
-    if a:tag.fields.kind == 'f' || a:tag.fields.kind == 'g'
-      let args_string = substitute(a:tag.pattern, "^.*defp\\?[ \t]*".a:tag.name."[ \t]*", "", "")
+
+function! vimide#elixir#tagbarFilter(tags) " {{{
+
+  function! SkipOTPCallbackAsFunction(index, line)
+    if a:line =~# '^!_TAG_'
+      return 1
+    endif
+
+    let parts = split(a:line, ';"')
+    if len(parts) != 2 " Is a valid tag line
+      return 1
+    endif
+
+    let [name, fname, pattern] = split(parts[0], '\t')
+    let fields = split(parts[1], '\t')
+
+    return ! (fields[0] == 'f' && name =~ "\\v(handle_call|handle_info|handle_cast|init|terminate)" )
+  endfunction
+
+  function! ArityExtract(idx, line)
+    if a:line =~# '^!_TAG_'
+      return line
+    endif
+
+    let parts = split(a:line, ';"')
+    if len(parts) != 2 " Is a valid tag line
+      return line
+    endif
+
+    let [name, fname, pattern] = split(parts[0], '\t')
+    let fields = split(parts[1], '\t')
+    let kind = fields[0]
+
+    if kind == 'f' || kind == 'g'
+      let args_string = substitute(pattern, "^.*defp\\?[ \t]*".name."[ \t]*", "", "")
       let args_string = substitute(args_string, "do[ \t]*\\\\[$]$", "", "") " multiline
 "      TODO: remove
 "      if a:tag.pattern =~ "defp reply"
@@ -34,7 +63,7 @@ function! vimide#elixir#tagbarFilter(tags) " {{{
       let args_len = len(args_string)
 
       if args_len == 0
-        let a:tag.name = a:tag.name."/0"
+        let name = name."/0"
       else
         let old_args_len = -10000
         while args_len != old_args_len
@@ -45,17 +74,78 @@ function! vimide#elixir#tagbarFilter(tags) " {{{
         endwhile
 
         let comma_count = len(substitute(args_string, "[^,]", "", "g"))
-        let a:tag.name = a:tag.name . "/" . (comma_count + 1)
+        let name = name . "/" . (comma_count + 1)
       endif
 
-      return a:tag
+      let new_line = join([ join([name, fname, pattern], "\t"), parts[1] ], ';"')
+
+      return new_line
     else
-      return a:tag
+      return a:line
     endif
   endfunction
 
+  function! ParseKindNameLine(line) 
+    if a:line =~# '^!_TAG_'
+      return []
+    endif
+
+    let parts = split(a:line, ';"')
+    if len(parts) != 2 " Is a valid tag line
+      return []
+    endif
+
+    let [name, fname, pattern] = split(parts[0], '\t')
+    let fields = split(parts[1], '\t')
+    let kind = fields[0]
+    let line_no = fields[1]
+
+    if line_no !~ '^line:\d\+'
+      return []
+    endif
+
+    let line_no = split(line_no, ':')
+
+    return [ kind, name, line_no[1] ]
+  endfunction
+
+  " remove OTP callbacks from ordinary function list
+  call filter(a:tags, function("SkipOTPCallbackAsFunction"))
+
   " replaces function names with function_name/arity notation
-  call map(a:tags, function('Arity_extract'))
+  call map(a:tags, function('ArityExtract'))
+
+  " ---------- create list of first lines when we seen function name ----
+  let seen_fnames = {}
+  for line in a:tags
+    let parsedLine = ParseKindNameLine(line)
+    if parsedLine != []
+      let [ kind, name, line_no ] = parsedLine
+
+      if ! has_key(seen_fnames, kind.name)
+        let seen_fnames[kind.name] = line_no
+      endif
+    endif
+  endfor
+
+  " leaves only first definition of function with same arity
+  function! FilterFun(seen_hash, idx, line)
+    let parsedLine = ParseKindNameLine(a:line)
+    if parsedLine != []
+      let [ kind, name, line_no ] = parsedLine
+      let key = kind . name
+      return a:seen_hash[key] == line_no
+    endif
+  endfunction
+
+  call filter(a:tags, function('FilterFun', [seen_fnames]))
+
+  return a:tags
+endfunction
+
+function! vimide#elixir#tagbarFilterOld(tags)
+  " remove OTP callbacks from ordinary function list
+
 
   let seen_list = map(copy(a:tags), '[v:val.fields.kind, v:val.name, v:val.fields.line]')
 
@@ -77,7 +167,7 @@ function! vimide#elixir#tagbarFilter(tags) " {{{
   call filter(a:tags, function('Filter_fun', [seen_fnames]))
 
   return a:tags
-endfunction " }}}
+endfunction
 
 function! vimide#elixir#installTagbarIntegration()
   " ####################################################################
@@ -103,8 +193,7 @@ function! vimide#elixir#installTagbarIntegration()
         \ 's:structs',
         \ 'p:protocols',
         \ 'r:records',
-        \ 'T:types',
-        \ 'z:foo'
+        \ 'T:types'
         \ ]
         \ }
 
@@ -162,3 +251,10 @@ function! s:setGlobal(name, default) " {{{
     endif
   endif
 endfunction " }}}
+
+"let s:var1 == readfile("")
+"
+"let rawtaglist = split(s:var1, '\n\+')
+"
+
+
