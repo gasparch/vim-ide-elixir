@@ -61,7 +61,7 @@ git_update_submodules() {
 
 	cd $CWD
 	git submodule sync > /dev/null &&
-	git submodule update --init --recursive --depth 100 -j 3
+	git submodule update --init --recursive --depth 100
 }
 
 update_release_file() {
