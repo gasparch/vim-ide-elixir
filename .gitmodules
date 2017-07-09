@@ -55,3 +55,6 @@
 [submodule "bundle/alchemist.vim"]
 	path = bundle/alchemist.vim
 	url = https://github.com/gasparch/alchemist.vim
+[submodule "bundle/vim-elixir-profiler"]
+	path = bundle/vim-elixir-profiler
+	url = https://github.com/gasparch/vim-elixir-profiler.git
