@@ -247,6 +247,16 @@ function! vimide#setAirlineSettings(setGlobal) "{{{
     let g:airline_section_z = airline#section#create(['%3p%%', 'linenr', 'maxlinenr', '%3v'])
     let g:airline_section_y = ''
     let g:airline_section_x = ''
+
+    " make separator line more visible
+    let g:airline_theme_patch_func = 'AirlineThemePatch'
+    function! AirlineThemePatch(palette)
+      if g:airline_theme == 'dark'
+        for colors in values(a:palette.inactive)
+          let colors[1] = '#1e1e1e'
+        endfor
+      endif
+    endfunction
   endif
 endfunction "}}}
 
