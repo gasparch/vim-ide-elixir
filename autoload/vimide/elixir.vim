@@ -38,12 +38,12 @@ function! vimide#elixir#tagbarFilter(tags) " {{{
 
   function! ArityExtract(idx, line)
     if a:line =~# '^!_TAG_'
-      return line
+      return a:line
     endif
 
     let parts = split(a:line, ';"')
     if len(parts) != 2 " Is a valid tag line
-      return line
+      return a:line
     endif
 
     let [name, fname, pattern] = split(parts[0], '\t')
