@@ -11,7 +11,7 @@ I’m a sucker for feedback. What do you think of this plugin after using it?
 Tell me! I have when things do nto work 'out-of-box' and eager to fix it!
 
 Please take 1 minute and subscribe to [mailing list](http://gasparchilingarov.com/vim-ide-updates/) to receive updates about
-the project. 
+the project.
 
 You can contact me on [twitter](http://twitter.com/gasparch) and by email
 gasparch at gmail dot com.
@@ -38,6 +38,9 @@ gasparch at gmail dot com.
  * Tracing
   * Run trace on selected ExUnit test or text selection
   * Quickly navigate in trace file
+ * Profiling
+  * Syntax highlight for `eprof` output
+  * On-fly sorting of profiler results
  * Other
   * Colorschemes for Elixir programming
   * Git integration directly from Vim
@@ -171,7 +174,7 @@ Following commands and shortcuts are available:
     Normal `:cl` `:copen` `:cnext` `:cprev` commands are available, but use of
     `[e` and `]e` is recommended.
  * `:cw` is redefined to show quickfix window always at bottom, even if split exists.
- * `:MixCompile` will compile files (`mix compile`) and show errors and warnings. 
+ * `:MixCompile` will compile files (`mix compile`) and show errors and warnings.
      All messages are loaded in quickfix.
  * `:MixCompile!` will recompile all project (`mix compile --force`) and show
     errors and warnings.  All messages are loaded in quickfix.
@@ -191,7 +194,7 @@ Following commands and shortcuts are available:
 
  **Functionality for Vim version 7.x:**
 
- * `ExUnitQfRunAll` or `<Leader>xa` runs ExUnit tests on whole project 
+ * `ExUnitQfRunAll` or `<Leader>xa` runs ExUnit tests on whole project
     (`mix test`) and shows output in quickfix window
  * `ExUnitQfRunFile` or `<Leader>xf` runs ExUnit tests on current file
     (`mix test path/to/file`) and shows output in quickfix window
@@ -223,7 +226,7 @@ Following commands and shortcuts are available:
  open and close Vim as much times as you want.
 
  Also this mode automatically re-runs your tests on any Elixir files saved in
- the project, removing hassle of switching and running them by hand. 
+ the project, removing hassle of switching and running them by hand.
 
  Test run status is shown in status line, so you don't need to check it manually.
 
@@ -233,11 +236,11 @@ Following commands and shortcuts are available:
  If you combine that with [ex\_unit\_notifier](https://github.com/navinpeiris/ex_unit_notifier) it
  becomes very easy to see if your tests fail or pass.
 
- Available commands: 
+ Available commands:
 
- * `ExUnitWatchAll` or `<Leader>wa` runs ExUnit tests on whole project 
+ * `ExUnitWatchAll` or `<Leader>wa` runs ExUnit tests on whole project
     (`mix test`) and shows output in xterm + quickfix window
- * `ExUnitWatchFile` or `<Leader>wf` runs ExUnit tests on current file 
+ * `ExUnitWatchFile` or `<Leader>wf` runs ExUnit tests on current file
     (`mix test path/to/file`) and shows output xterm + in quickfix window
  * `ExUnitWatchLine` or `<Leader>wl` runs ExUnit tests on current line of
     current file, effectively running just one test.
@@ -280,8 +283,8 @@ Following commands and shortcuts are available:
  Also navigating around trace may be difficult, as there is so much information
  present, so navigation shortcuts are provided for that.
 
- Available commands: 
- 
+ Available commands:
+
  * `ErlTraceTest` or `<Leader>te` runs ExUnit test under cursor with tracing
    enabled and shows resulting trace in separate window.
  * `ErlTraceSelection` or `<Leader>ty` runs selected test with tracing enabled
@@ -296,3 +299,16 @@ Following commands and shortcuts are available:
  * `(`, `)` jumps back/forward to next function call/return (skips messages)
  * `{`, `}` jumps back/forward over repeated function calls
  * `F3` opens arguments fold; also when cursor is on function call/ret line
+
+
+## Profiling support
+
+ Includes initial support for viewing profiler files and navigating around them.
+
+ * Files with extension `.eprof` are recognized as eprof profiler output
+ * Erlang module names translated to Elixir module names convention
+ * Supports re-sorting file with shortcuts
+
+ See more on [vim-elixir-profiler](https://github.com/gasparch/vim-elixir-profiler) page.
+
+

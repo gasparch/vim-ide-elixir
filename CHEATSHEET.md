@@ -101,6 +101,11 @@ shortcuts/commands:
  * `<Leader>tv` opens correlative source/test file in vertical split
  * `<Leader>t!` opens correlative source/test, creates directories if necessary
 
+ * `<Leader>tg` or `<Leader>gt` opens last auto-run test file
+
+ Commands `wf`, `wl`, `xf` and `xl` will jump to corresponding test file if
+ issued in source file buffer.
+
 #### Tracing
  * `<Leader>te` execute ExUnit test under cursor with tracing and window with
    trace output (mnemonics: Trace Exunit)
